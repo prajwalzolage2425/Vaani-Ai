@@ -16,14 +16,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const audioPreview = document.getElementById("audio-preview");
   const previewPlayer = document.getElementById("preview-player");
   const btnAnalyze = document.getElementById("btn-analyze");
-  const btnDemoTest = document.getElementById("btn-demo-test");
   const loadingOverlay = document.getElementById("loading-overlay");
   const loadingStep = document.getElementById("loading-step");
   const resultContainer = document.getElementById("result-container");
   const micErrorBanner = document.getElementById("mic-error-banner");
   const btnTryAgain = document.getElementById("btn-try-again");
   const btnNextItem = document.getElementById("btn-next-item");
-  const forceDemoToggle = document.getElementById("force-demo-toggle");
 
   // State
   let allItems = [];      // full unfiltered list
@@ -241,7 +239,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Execution pipeline for pronunciation analysis
-  async function executeAnalysis(isDemo = false) {
+  async function executeAnalysis() {
     if (!currentItem) return;
 
     if (loadingOverlay) loadingOverlay.classList.add("active");
@@ -263,10 +261,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       formData.append("item_id", currentItem._id);
       formData.append("user_id", userId);
 
-      if (isDemo || (forceDemoToggle && forceDemoToggle.checked)) {
-        formData.append("force_demo", "true");
-      }
-
       const result = await API.analyze(formData);
       renderResults(result);
 
@@ -280,11 +274,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Button clicks
   if (btnAnalyze) {
-    btnAnalyze.addEventListener("click", () => executeAnalysis(false));
-  }
-
-  if (btnDemoTest) {
-    btnDemoTest.addEventListener("click", () => executeAnalysis(true));
+    btnAnalyze.addEventListener("click", () => executeAnalysis());
   }
 
   // Render Result Screen

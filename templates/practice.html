@@ -59,7 +59,7 @@
       <div id="mic-error-banner" style="display: none; background: #FDEDEC; border: 1.5px solid #E74C3C; color: #922B21; padding: 0.85rem 1rem; border-radius: var(--radius-sm); margin-bottom: 1.25rem; font-size: 0.9rem; text-align: left;">
       </div>
 
-      <!-- Record Button & Quick Demo Trigger -->
+      <!-- Record Button & Timer -->
       <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; margin: 1rem 0;">
         <div style="display: flex; align-items: center; gap: 1rem;">
           <button id="btn-record" class="btn-record" title="Click to start/stop live microphone recording">
@@ -70,14 +70,6 @@
           </button>
         </div>
         <div id="rec-timer" class="rec-timer">0.0s</div>
-        
-        <!-- Live Demo Trigger for Exhibition Presentations -->
-        <button id="btn-demo-test" class="btn btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1.1rem; margin-top: 0.25rem;">
-          <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-          </svg>
-          <span>Live Demo Simulation (Instant IKS Analysis)</span>
-        </button>
       </div>
 
       <!-- Audio Preview Player -->
@@ -92,14 +84,6 @@
           <span>परीक्षणं क्रियताम् (Analyze Pronunciation)</span>
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.35rem;"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </button>
-      </div>
-
-      <!-- Demo Mode Exhibition Checkbox (For Live Demo Presentation Safety) -->
-      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed var(--cream-border); display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem; color: var(--brown-muted);">
-        <input type="checkbox" id="force-demo-toggle" {% if demo_mode %}checked{% endif %}>
-        <label for="force-demo-toggle" style="cursor: pointer;">
-          Offline Exhibition Mode (Guaranteed reliable response for demo pairs)
-        </label>
       </div>
     </div>
   </div>
