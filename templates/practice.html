@@ -4,9 +4,9 @@
 
 {% block content %}
 <!-- Top Category Bar & Item Selector -->
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+<div class="practice-filter-bar" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
   <!-- Category Filter Tabs -->
-  <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <div class="practice-filter-pills" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
     <button class="btn btn-secondary filter-type-btn active" data-type="all">All Items</button>
     <button class="btn btn-secondary filter-type-btn" data-type="letter">वर्ण (Minimal Pairs)</button>
     <button class="btn btn-secondary filter-type-btn" data-type="word">शब्द (Words)</button>
@@ -14,7 +14,7 @@
   </div>
 
   <!-- Item Select Dropdown -->
-  <div style="min-width: 280px; flex: 1; max-width: 420px;">
+  <div class="practice-select-wrap" style="min-width: 280px; flex: 1; max-width: 420px;">
     <select id="item-select" class="btn btn-secondary" style="width: 100%; text-align: left; padding: 0.75rem 1rem; font-weight: 600; cursor: pointer;">
       <option value="">Loading practice items...</option>
     </select>

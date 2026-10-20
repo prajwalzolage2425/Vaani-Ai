@@ -280,23 +280,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       const heardDisplay = att.recognized_text || "—";
 
       tr.innerHTML = `
-        <td style="font-weight: 700; color: var(--text-muted);">${attemptNum}</td>
-        <td style="font-size: 0.85rem; color: var(--text-muted); white-space: nowrap;">${dateStr}</td>
-        <td>
+        <td data-label="#" style="font-weight: 700; color: var(--text-muted);">${attemptNum}</td>
+        <td data-label="Time" style="font-size: 0.85rem; color: var(--text-muted); white-space: nowrap;">${dateStr}</td>
+        <td data-label="Target">
           <div class="deva-text" style="font-weight: 600; font-size: 1.08rem; color: var(--text-primary);">${escapeHtml(targetDisplay)}</div>
           ${subDisplay ? `<div style="font-size: 0.78rem; color: var(--text-muted); font-style: italic; margin-top: 0.15rem;">${escapeHtml(subDisplay)}</div>` : ''}
         </td>
-        <td>
+        <td data-label="Heard">
           <span class="deva-text" style="font-size: 1.02rem; color: var(--text-secondary); font-weight: 500;">${escapeHtml(heardDisplay)}</span>
         </td>
-        <td style="font-weight: 800; font-size: 1.15rem; color: ${scoreColor};">${score}%</td>
-        <td>
+        <td data-label="Score" style="font-weight: 800; font-size: 1.15rem; color: ${scoreColor};">${score}%</td>
+        <td data-label="Status">
           ${errorCount === 0 
             ? `<span class="badge-demo" style="background: var(--status-clean-bg); color: var(--status-clean); border-color: var(--status-clean-border);">शुद्ध (Clean)</span>`
             : `<span class="badge-demo" style="background: var(--status-error-bg); color: var(--status-error); border-color: var(--status-error-border);">${errorCount} दोष (${errorCount} Err)</span>`
           }
         </td>
-        <td style="text-align: right; white-space: nowrap;">
+        <td data-label="Actions" style="text-align: right; white-space: nowrap;">
           <button class="btn-action-view" data-index="${idx}" title="View detailed Shiksha error report">
             ${Icons.report("ui-icon ui-icon-sm")} <span>Report</span>
           </button>
