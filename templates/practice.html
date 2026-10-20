@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}VaaniAI - Practice Sanskrit Phonetics{% endblock %}
+
+{% block content %}
+<!-- Top Category Bar & Item Selector -->
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+  <!-- Category Filter Tabs -->
+  <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+    <button class="btn btn-secondary filter-type-btn active" data-type="all">All Items</button>
+    <button class="btn btn-secondary filter-type-btn" data-type="letter">वर्ण (Minimal Pairs)</button>
+    <button class="btn btn-secondary filter-type-btn" data-type="word">शब्द (Words)</button>
+    <button class="btn btn-secondary filter-type-btn" data-type="shloka">श्लोक (Shlokas / Mantras)</button>
+  </div>
+
+  <!-- Item Select Dropdown -->
+  <div style="min-width: 280px; flex: 1; max-width: 420px;">
+    <select id="item-select" class="btn btn-secondary" style="width: 100%; text-align: left; padding: 0.75rem 1rem; font-weight: 600; cursor: pointer;">
+      <option value="">Loading practice items...</option>
+    </select>
+  </div>
+</div>
+
+<!-- Main Practice Grid (Left: Pronunciation & Recording, Right: Sthāna Vocal Tract Diagram) -->
+<div class="practice-grid">
+  
+  <!-- Left Column: Target Sound, Reference Audio & Recording Console -->
+  <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+    
+    <!-- Target Card -->
+    <div class="target-display-card">
+      <div id="target-deva" class="target-deva deva-text">त vs ट</div>
+      <div id="target-roman" class="target-roman">ta vs ṭa</div>
+      <div id="target-meaning" class="target-meaning">
+        Minimal Pair: Dental 'त' (tongue on teeth) vs Retroflex 'ट' (curled to roof)
+      </div>
+
+      <!-- Reference Audio Playback -->
+      <div class="controls-bar">
+        <button id="btn-listen" class="btn btn-secondary">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          </svg>
+          <span>Listen Reference</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Recording Console Card -->
+    <div class="iks-card" style="text-align: center; padding: 2rem 1.5rem;">
+      <h3 class="classical-heading" style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary);">
+        उच्चारयतु (Record Your Voice)
+      </h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        Speak clearly into your microphone when the indicator turns red.
+      </p>
+
+      <!-- Microphone Permission Error Banner -->
+      <div id="mic-error-banner" style="display: none; background: #FDEDEC; border: 1.5px solid #E74C3C; color: #922B21; padding: 0.85rem 1rem; border-radius: var(--radius-sm); margin-bottom: 1.25rem; font-size: 0.9rem; text-align: left;">
+      </div>
+
+      <!-- Record Button & Quick Demo Trigger -->
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; margin: 1rem 0;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <button id="btn-record" class="btn-record" title="Click to start/stop live microphone recording">
+            <svg class="ui-icon-record" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>
+            </svg>
+            <span id="record-label">Record</span>
+          </button>
+        </div>
+        <div id="rec-timer" class="rec-timer">0.0s</div>
+        
+        <!-- Live Demo Trigger for Exhibition Presentations -->
+        <button id="btn-demo-test" class="btn btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1.1rem; margin-top: 0.25rem;">
+          <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          <span>Live Demo Simulation (Instant IKS Analysis)</span>
+        </button>
+      </div>
+
+      <!-- Audio Preview Player -->
+      <div id="audio-preview" style="display: none; margin-top: 1.25rem;">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600;">Your Recorded Voice:</p>
+        <audio id="preview-player" controls style="width: 100%; max-width: 320px;"></audio>
+      </div>
+
+      <!-- Analyze Action Button -->
+      <div style="margin-top: 1.5rem;">
+        <button id="btn-analyze" class="btn btn-primary btn-lg" style="display: none;">
+          <span>परीक्षणं क्रियताम् (Analyze Pronunciation)</span>
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.35rem;"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+
+      <!-- Demo Mode Exhibition Checkbox (For Live Demo Presentation Safety) -->
+      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed var(--cream-border); display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem; color: var(--brown-muted);">
+        <input type="checkbox" id="force-demo-toggle" {% if demo_mode %}checked{% endif %}>
+        <label for="force-demo-toggle" style="cursor: pointer;">
+          Offline Exhibition Mode (Guaranteed reliable response for demo pairs)
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Sthāna Vocal Tract Diagram Panel -->
+  <div class="iks-card sthana-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3 class="classical-heading" style="font-size: 1.25rem; color: var(--brown-dark);">
+        स्थान विन्यास (Place of Articulation)
+      </h3>
+      <span class="badge-demo" style="background: var(--gold-light); color: var(--gold-accent); border-color: rgba(183, 129, 3, 0.3);">
+        Pāṇinīya Śikṣā
+      </span>
+    </div>
+
+    <!-- Active Sthana & Sutra Banner -->
+    <div class="sutra-banner">
+      <div class="sutra-title" id="sthana-banner-name">दन्त्य (Dantya - Upper Teeth)</div>
+      <div class="sutra-text deva-text" id="sthana-banner-sutra">ऌतुलसानां दन्ताः</div>
+    </div>
+
+    <!-- Interactive SVG Container -->
+    <div id="sthana-diagram-container" class="sthana-svg-container">
+      <!-- SVG Injected by sthana_diagram.js -->
+    </div>
+
+    <!-- Sthana Guide Legend -->
+    <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; background: var(--surface-sub); padding: 0.85rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.5rem;">
+      <svg class="ui-icon" style="color: var(--accent-gold-dark);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>
+      </svg>
+      <div><strong>IKS Diagnostic:</strong> Click any character in the evaluation breakdown below to visualize its exact <em>Sthāna</em> and tongue placement on the anatomical cross-section.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Results Screen Section (Displayed after analysis) -->
+<div id="result-container" class="result-container iks-card" style="margin-top: 2.5rem; padding: 2.5rem 2rem;">
+  <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+    
+    <!-- Score Dial -->
+    <div id="res-score-circle" class="score-badge-circle score-mid">
+      <div id="res-score-num" class="score-num">86</div>
+      <div class="score-label">शिक्षा Score</div>
+    </div>
+
+    <h2 class="classical-heading" style="font-size: 1.7rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+      Pronunciation Diagnostic (उच्चारण परीक्षणम्)
+    </h2>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">
+      Evaluated strictly via <em>Sthāna</em> (articulation site), <em>Mahāprāṇa</em> (aspiration), and <em>Ghoṣa</em> (voicing).
+    </p>
+
+    <!-- Color-Coded Target Text per Character -->
+    <div id="char-breakdown-container" class="char-breakdown">
+      <!-- Injected dynamically: Green = Correct, Red = Error -->
+    </div>
+
+    <!-- Shiksha Corrective Tip Box -->
+    <div class="tip-box">
+      <div class="tip-header">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+        <span>पाणिनीय शिक्षा परामर्शः (Articulatory Remedy)</span>
+      </div>
+      <div id="res-tip-content" class="tip-content">
+        Loading guidance...
+      </div>
+    </div>
+
+    <!-- Detailed Error Breakdown List -->
+    <div id="error-list-container" class="error-list">
+      <!-- Injected dynamically with difference matrix -->
+    </div>
+
+    <!-- Action Buttons: Try Again & Next Sound -->
+    <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+      <button id="btn-try-again" class="btn btn-secondary btn-lg">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+        </svg>
+        <span>पुनः प्रयत्नः क्रियताम् (Try Again)</span>
+      </button>
+      <button id="btn-next-item" class="btn btn-primary btn-lg">
+        <span>अग्रिमः वर्णः (Next Sound)</span>
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.35rem;"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Full-Screen Loading Overlay with Multi-Stage Feedback -->
+<div id="loading-overlay" class="loading-overlay">
+  <div class="loading-modal">
+    <div class="spinner"></div>
+    <h3 class="classical-heading" style="font-size: 1.4rem; color: var(--brown-dark); margin-bottom: 0.5rem;">
+      Analyzing Articulation
+    </h3>
+    <p id="loading-step" class="loading-step">
+      Recording captured. Uploading waveform...
+    </p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/audio.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sthana_diagram.js') }}"></script>
+<script src="{{ url_for('static', filename='js/practice.js') }}"></script>
+{% endblock %}

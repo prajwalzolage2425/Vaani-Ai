@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}VaaniAI - Free Mode (Speak Any Shloka){% endblock %}
+
+{% block content %}
+<!-- Free Mode Hero -->
+<section class="hero-section" style="max-width: 860px; margin: 0 auto 1.5rem;">
+  <div class="hero-pill">
+    <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.35rem;">
+      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>
+    </svg>
+    <span>Free Mode • Open Recitation Analysis</span>
+  </div>
+  <h1 class="hero-title classical-heading" style="font-size: 2.4rem; margin-bottom: 0.5rem;">
+    Speak Any <span>Shloka</span> Freely
+  </h1>
+  <p class="hero-desc" style="font-size: 1.05rem; margin-bottom: 1rem;">
+    Record any Sanskrit verse, mantra, or shloka. VaaniAI will transcribe it, identify the source,
+    and perform a full Pāṇinian phonetic analysis with corrective Śikṣā feedback.
+  </p>
+</section>
+
+<!-- Step Progress Bar -->
+<div class="free-steps-bar">
+  <div class="free-step active" id="step-ind-1">
+    <div class="free-step-num">1</div>
+    <div class="free-step-label">Record</div>
+  </div>
+  <div class="free-step-line" id="line-1-2"></div>
+  <div class="free-step" id="step-ind-2">
+    <div class="free-step-num">2</div>
+    <div class="free-step-label">Transcribe</div>
+  </div>
+  <div class="free-step-line" id="line-2-3"></div>
+  <div class="free-step" id="step-ind-3">
+    <div class="free-step-num">3</div>
+    <div class="free-step-label">Identify</div>
+  </div>
+  <div class="free-step-line" id="line-3-4"></div>
+  <div class="free-step" id="step-ind-4">
+    <div class="free-step-num">4</div>
+    <div class="free-step-label">Analyze</div>
+  </div>
+  <div class="free-step-line" id="line-4-5"></div>
+  <div class="free-step" id="step-ind-5">
+    <div class="free-step-num">5</div>
+    <div class="free-step-label">Report</div>
+  </div>
+</div>
+
+<!-- ===== STEP 1: Record ===== -->
+<div class="free-panel" id="panel-record">
+  <div class="iks-card" style="text-align: center; padding: 2.5rem 2rem; max-width: 680px; margin: 0 auto;">
+    <h2 class="classical-heading" style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+      उच्चारयतु (Record Your Recitation)
+    </h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem;">
+      Speak any Sanskrit shloka, mantra, or verse clearly into your microphone.
+      No need to select from a list — just recite freely.
+    </p>
+
+    <!-- Mic Error Banner -->
+    <div id="free-mic-error" style="display: none; background: #FDEDEC; border: 1.5px solid #E74C3C; color: #922B21; padding: 0.85rem 1rem; border-radius: var(--radius-sm); margin-bottom: 1.25rem; font-size: 0.9rem; text-align: left;"></div>
+
+    <!-- Record Button -->
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+      <button id="free-btn-record" class="btn-record" title="Click to start/stop recording">
+        <svg class="ui-icon-record" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>
+        </svg>
+        <span id="free-record-label">Record</span>
+      </button>
+      <div id="free-rec-timer" class="rec-timer">0.0s</div>
+    </div>
+
+    <!-- Audio Preview -->
+    <div id="free-audio-preview" style="display: none; margin-top: 1.5rem;">
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600;">Your Recorded Voice:</p>
+      <audio id="free-preview-player" controls style="width: 100%; max-width: 350px;"></audio>
+    </div>
+
+    <!-- Submit Button -->
+    <div style="margin-top: 2rem;">
+      <button id="free-btn-submit" class="btn btn-primary btn-lg" style="display: none;">
+        <span>श्रवणम् आरभ्यताम् (Analyze My Recording)</span>
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.35rem;"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STEP 2: Transcription Result (Pass 1) ===== -->
+<div class="free-panel" id="panel-transcribe" style="display: none;">
+  <div class="iks-card" style="max-width: 780px; margin: 0 auto; padding: 2.5rem 2rem;">
+    <h2 class="classical-heading" style="font-size: 1.4rem; color: var(--text-primary); margin-bottom: 0.25rem;">
+      Pass 1 — Raw Transcription (यथाश्रुतम्)
+    </h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+      Gemini transcribed exactly what it phonetically heard — no auto-correction.
+    </p>
+
+    <div class="sutra-banner" style="margin-bottom: 1.5rem;">
+      <div class="sutra-title">I Heard (श्रुतम्):</div>
+      <div id="free-heard-text" class="sutra-text deva-text" style="font-size: 1.6rem; line-height: 1.4;"></div>
+      <div id="free-heard-translit" style="font-size: 0.95rem; color: var(--brand-primary); font-style: italic; margin-top: 0.35rem;"></div>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem; align-items: center; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+      <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      </svg>
+      <span>Audio Clarity:</span>
+      <div style="flex: 1; height: 8px; background: var(--surface-sub); border-radius: 4px; overflow: hidden; border: 1px solid var(--border-subtle);">
+        <div id="free-clarity-bar" style="height: 100%; background: var(--status-clean); border-radius: 4px; transition: width 0.5s;"></div>
+      </div>
+      <span id="free-clarity-val" style="font-weight: 700;"></span>
+    </div>
+
+    <div style="text-align: center;">
+      <button id="free-btn-identify" class="btn btn-primary btn-lg">
+        <span>Identify Shloka (श्लोकं ज्ञायताम्)</span>
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.35rem;"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STEP 3: Shloka Identification (Pass 2) + Editable Intended Text ===== -->
+<div class="free-panel" id="panel-identify" style="display: none;">
+  <div class="iks-card" style="max-width: 780px; margin: 0 auto; padding: 2.5rem 2rem;">
+    <h2 class="classical-heading" style="font-size: 1.4rem; color: var(--text-primary); margin-bottom: 0.25rem;">
+      Pass 2 — Shloka Identification (श्लोक परिचयः)
+    </h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+      Gemini identified the verse and suggested the standard canonical text.
+      <strong>You may edit it</strong> if needed — paste the correct text from a book.
+    </p>
+
+    <!-- Source Badge -->
+    <div id="free-source-badge" class="sutra-banner" style="margin-bottom: 1.25rem; border-left-color: var(--status-clean); background: var(--status-clean-bg);">
+      <div class="sutra-title" style="color: var(--status-clean);">Identified Source (ग्रन्थ सन्दर्भः):</div>
+      <div id="free-source-text" class="sutra-text" style="color: #065F46; font-size: 1.15rem;"></div>
+    </div>
+
+    <!-- Meaning -->
+    <div id="free-meaning-box" style="background: var(--accent-gold-light); border: 1px solid rgba(217,119,6,0.3); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+      <div style="font-size: 0.8rem; text-transform: uppercase; font-weight: 800; color: var(--accent-gold-dark); margin-bottom: 0.25rem;">Meaning (अर्थः):</div>
+      <div id="free-meaning-text" style="font-size: 1rem; color: var(--text-primary); line-height: 1.6;"></div>
+    </div>
+
+    <!-- Editable Intended Text -->
+    <div style="margin-bottom: 1.5rem;">
+      <label for="free-intended-input" style="display: flex; align-items: center; gap: 0.4rem; font-weight: 700; margin-bottom: 0.5rem; font-size: 1rem; color: var(--text-primary);">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/>
+        </svg>
+        <span>Intended Text (सम्यक् पाठः) — Edit if needed:</span>
+      </label>
+      <textarea id="free-intended-input" rows="3" class="deva-text"
+        style="width: 100%; padding: 1rem; border: 2px solid var(--brand-primary); border-radius: var(--radius-sm);
+        font-size: 1.25rem; font-family: var(--font-deva); background: #FFFFFF; line-height: 1.6; resize: vertical;"></textarea>
+      <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem; display: flex; align-items: center; gap: 0.3rem;">
+        <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+        </svg>
+        <span>Correct this if the AI suggestion is wrong. You can paste the exact text from a book or scripture.</span>
+      </div>
+    </div>
+
+    <!-- IKS Analysis Panel -->
+    <div id="free-iks-panel" style="display: none; margin-bottom: 1.5rem;">
+      <div class="sutra-banner" style="border-left-color: var(--brand-primary); background: var(--brand-light);">
+        <div class="sutra-title" style="color: var(--brand-primary);">IKS Analysis (ज्ञानपरम्परा विश्लेषणम्):</div>
+        <div id="free-iks-details" style="font-size: 0.95rem; color: var(--text-primary); line-height: 1.7; margin-top: 0.5rem;"></div>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <button id="free-btn-analyze" class="btn btn-primary btn-lg">
+        <span>Perform Śikṣā Analysis (परीक्षणम्)</span>
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.35rem;"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STEP 4-5: Full Analysis Report ===== -->
+<div class="free-panel" id="panel-report" style="display: none;">
+  <div class="iks-card" style="max-width: 840px; margin: 0 auto; padding: 2.5rem 2rem;">
+
+    <!-- Score Circle -->
+    <div style="text-align: center;">
+      <div id="free-score-circle" class="score-badge-circle score-mid">
+        <div id="free-score-num" class="score-num">0</div>
+        <div class="score-label">शिक्षा Score</div>
+      </div>
+
+      <h2 class="classical-heading" style="font-size: 1.6rem; color: var(--brown-dark); margin-bottom: 0.25rem;">
+        Pronunciation Diagnostic (उच्चारण परीक्षणम्)
+      </h2>
+      <p style="color: var(--brown-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">
+        Character-level diff + Gemini audio re-check + Pāṇinian Sthāna/Prayatna analysis
+      </p>
+
+      <!-- Stats Row -->
+      <div style="display: flex; gap: 1rem; justify-content: center; margin: 1rem 0; flex-wrap: wrap;">
+        <div class="stat-card" style="padding: 0.85rem 1.25rem; min-width: 120px;">
+          <div id="free-stat-total" class="stat-val" style="font-size: 1.8rem;">0</div>
+          <div class="stat-label">Phonemes</div>
+        </div>
+        <div class="stat-card" style="padding: 0.85rem 1.25rem; min-width: 120px;">
+          <div id="free-stat-matched" class="stat-val" style="font-size: 1.8rem; color: var(--iks-correct);">0</div>
+          <div class="stat-label">Matched</div>
+        </div>
+        <div class="stat-card" style="padding: 0.85rem 1.25rem; min-width: 120px;">
+          <div id="free-stat-errors" class="stat-val" style="font-size: 1.8rem; color: var(--iks-error);">0</div>
+          <div class="stat-label">Errors</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Heard vs Intended Side by Side -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+      <div class="sutra-banner" style="border-left-color: var(--iks-error); background: var(--iks-error-bg);">
+        <div class="sutra-title" style="color: var(--iks-error);">What You Said (श्रुतम्):</div>
+        <div id="free-rpt-heard" class="deva-text" style="font-size: 1.15rem; margin-top: 0.3rem;"></div>
+      </div>
+      <div class="sutra-banner" style="border-left-color: var(--iks-correct); background: var(--iks-correct-bg);">
+        <div class="sutra-title" style="color: var(--iks-correct);">Standard Text (प्रमाणम्):</div>
+        <div id="free-rpt-intended" class="deva-text" style="font-size: 1.15rem; margin-top: 0.3rem;"></div>
+      </div>
+    </div>
+
+    <!-- Color-Coded Character Breakdown -->
+    <h3 class="classical-heading" style="font-size: 1.15rem; color: var(--brown-dark); margin: 1.5rem 0 0.75rem;">
+      Character-Level Diff (वर्णविश्लेषणम्)
+    </h3>
+    <div id="free-char-breakdown" class="char-breakdown"></div>
+
+    <!-- Corrective Tip -->
+    <div class="tip-box" style="margin-top: 1.5rem;">
+      <div class="tip-header">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+        <span>पाणिनीय शिक्षा परामर्शः (Articulatory Remedy)</span>
+      </div>
+      <div id="free-tip-content" class="tip-content"></div>
+    </div>
+
+    <!-- Error Details -->
+    <div id="free-error-list" class="error-list" style="margin-top: 1.25rem;"></div>
+
+    <!-- Sthāna Diagram (reused) -->
+    <div class="iks-card sthana-panel" style="margin-top: 1.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 class="classical-heading" style="font-size: 1.15rem; color: var(--text-primary);">
+          स्थान विन्यास (Place of Articulation)
+        </h3>
+        <span class="badge-demo" style="background: var(--accent-gold-light); color: var(--accent-gold-dark);">Pāṇinīya Śikṣā</span>
+      </div>
+      <div class="sutra-banner" style="margin: 0.75rem 0;">
+        <div class="sutra-title" id="free-sthana-name">Select a character above</div>
+        <div class="sutra-text deva-text" id="free-sthana-sutra"></div>
+      </div>
+      <div id="free-sthana-diagram" class="sthana-svg-container"></div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+      <button id="free-btn-restart" class="btn btn-secondary btn-lg">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+        </svg>
+        <span>पुनः उच्चारयतु (Record Again)</span>
+      </button>
+      <a href="{{ url_for('practice') }}" class="btn btn-primary btn-lg">
+        <span>Guided Practice</span>
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.35rem;"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div id="free-loading" class="loading-overlay">
+  <div class="loading-modal">
+    <div class="spinner"></div>
+    <h3 class="classical-heading" style="font-size: 1.3rem; color: var(--brown-dark); margin-bottom: 0.5rem;">
+      Processing...
+    </h3>
+    <p id="free-loading-step" class="loading-step">Uploading audio...</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/audio.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sthana_diagram.js') }}"></script>
+<script src="{{ url_for('static', filename='js/free.js') }}"></script>
+{% endblock %}

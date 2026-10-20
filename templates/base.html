@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}VaaniAI - Sanskrit Pronunciation System{% endblock %}</title>
+  
+  <!-- SEO & Social Meta -->
+  <meta name="description" content="AI-powered Sanskrit pronunciation and phonetic correction system grounded in Indian Knowledge Systems (Pāṇinīya Śikṣā).">
+  <meta name="theme-color" content="#E65100">
+
+  <!-- Premium Typography: Eczar (Classical Sanskrit Serif), Noto Serif Devanagari, Plus Jakarta Sans (Modern UI), Cinzel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Eczar:wght@500;600;700;800&family=Noto+Serif+Devanagari:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tiro+Devanagari+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
+
+  <!-- Chart.js for Visualizing Learning Curves -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Application Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <!-- SVG Icon Library -->
+  <script src="{{ url_for('static', filename='js/icons.js') }}"></script>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- Top Floating Glassmorphic Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="{{ url_for('index') }}" class="brand-link" id="brand-home-link" title="VaaniAI Home">
+        <div class="brand-icon deva-text">वा</div>
+        <div>
+          <div class="brand-name">वाणी<span class="brand-accent">AI</span></div>
+          <div class="brand-subtitle">पाणिनीय शिक्षा • Pāṇinian Phonetics</div>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li>
+            <a href="{{ url_for('index') }}" class="nav-link {% if request.path == '/' %}active{% endif %}" id="nav-home">
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('practice') }}" class="nav-link {% if request.path == '/practice' %}active{% endif %}" id="nav-practice">
+              <span>Practice (अभ्यासः)</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('free_mode') }}" class="nav-link {% if request.path == '/free' %}active{% endif %}" id="nav-free">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>
+              </svg>
+              <span>Free Mode</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.path == '/dashboard' %}active{% endif %}" id="nav-dashboard">
+              <span>Dashboard (प्रगतिः)</span>
+            </a>
+          </li>
+          <li>
+            {% if demo_mode %}
+            <span class="badge-demo" id="demo-mode-badge" title="Running in deterministic Demo Mode for reliable stage exhibition">
+              <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.2rem;">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+              <span>Demo Mode</span>
+            </span>
+            {% else %}
+            <span class="badge-status-live" title="Connected to Google Gemini Live API">
+              <span class="pulse-dot"></span>
+              <span>Gemini Live</span>
+            </span>
+            {% endif %}
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Dynamic Page Content -->
+  <main class="main-wrapper">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div class="toast" id="global-toast"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div style="max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
+      <div>
+        <strong>VaaniAI</strong> — Grounded in <em>Pāṇinīya Śikṣā</em> (पाणिनीय शिक्षा)
+      </div>
+      <div>
+        College IKS Exhibition Prototype • AI & Data Science
+      </div>
+    </div>
+  </footer>
+
+  <!-- Core Scripts -->
+  <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

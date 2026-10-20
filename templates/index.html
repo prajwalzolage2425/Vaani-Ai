@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}VaaniAI - Classical Sanskrit Pronunciation System{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+  <div class="hero-pill">Indian Knowledge Systems (IKS) • पाणिनीय शिक्षा</div>
+  <h1 class="hero-title classical-heading">
+    Master Authentic <span>Sanskrit Phonetics</span> With AI
+  </h1>
+  <p class="hero-desc">
+    Eliminate pronunciation confusion between dental <strong>त</strong> vs retroflex <strong>ट</strong>, 
+    and unaspirated <strong>ग</strong> vs aspirated <strong>घ</strong>. Grounded in the <em>Śikṣā Vedāṅga</em>, 
+    VaaniAI identifies your exact place of articulation (<em>Sthāna</em>) and effort (<em>Prayatna</em>) 
+    in real-time to give classical corrective feedback.
+  </p>
+</section>
+
+<!-- Setup Preferences Card -->
+<div class="iks-card" style="max-width: 760px; margin: 0 auto 3.5rem;">
+  <div style="text-align: center; margin-bottom: 1.75rem;">
+    <h2 class="classical-heading" style="font-size: 1.45rem; color: var(--text-primary); margin-bottom: 0.35rem;">
+      Configure Your Practice Session (सत्र संयोजनम्)
+    </h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">
+      Select your language and proficiency level to calibrate the Pāṇinian articulatory engine.
+    </p>
+  </div>
+
+  <form id="preferences-form">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
+      <!-- Language Selection -->
+      <div>
+        <label for="select-language" style="display: block; font-weight: 700; font-size: 0.88rem; margin-bottom: 0.45rem; color: var(--text-primary);">
+          Select Language (भाषा)
+        </label>
+        <select id="select-language" class="form-control" style="cursor: pointer;">
+          <option value="sanskrit" selected>संस्कृतम् (Sanskrit Classical)</option>
+          <option value="hindi">हिन्दी (Hindi Standard)</option>
+        </select>
+      </div>
+
+      <!-- Level Selection -->
+      <div>
+        <label for="select-level" style="display: block; font-weight: 700; font-size: 0.88rem; margin-bottom: 0.45rem; color: var(--text-primary);">
+          Select Mastery Level (स्तर)
+        </label>
+        <select id="select-level" class="form-control" style="cursor: pointer;">
+          <option value="beginner" selected>प्रारम्भिक (Beginner - Minimal Pairs & Letters)</option>
+          <option value="intermediate">मध्यम (Intermediate - Words & Shlokas)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Student Name -->
+    <div style="margin-bottom: 1.75rem;">
+      <label for="student-name" style="display: block; font-weight: 700; font-size: 0.88rem; margin-bottom: 0.45rem; color: var(--text-primary);">
+        Student Name / ID (छात्र नाम)
+      </label>
+      <input type="text" id="student-name" value="Arya Sharma" placeholder="Enter student name" class="form-control">
+    </div>
+
+    <!-- Start Practice CTA -->
+    <div style="text-align: center;">
+      <button type="submit" class="btn btn-primary btn-lg" id="btn-start-practice" style="width: 100%; max-width: 360px;">
+        <span>आरम्भः क्रियताम् (Start Practicing)</span>
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.35rem;"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- IKS Foundations Overview Cards -->
+<div style="margin-top: 3.5rem;">
+  <div style="text-align: center; margin-bottom: 2.25rem;">
+    <h2 class="classical-heading" style="font-size: 1.85rem; color: var(--text-primary); margin-bottom: 0.35rem;">
+      The Pāṇinian Framework: Sthāna & Prayatna
+    </h2>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">
+      Canonical articulatory science from the <em>Pāṇinīya Śikṣā</em> (पाणिनीय शिक्षा).
+    </p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+    <!-- Sthana Card -->
+    <div class="iks-card">
+      <div style="width: 44px; height: 44px; background: var(--accent-gold-light); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 1.1rem; border: 1px solid rgba(217, 119, 6, 0.2);">
+        <svg class="ui-icon ui-icon-lg" style="color: var(--accent-gold-dark);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+        </svg>
+      </div>
+      <h3 class="classical-heading" style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary);">
+        स्थान (Sthāna - Place of Articulation)
+      </h3>
+      <p style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.65;">
+        Every sound in Sanskrit originates from one of 5 distinct anatomical vocal regions: 
+        <strong>Kaṇṭha</strong> (Throat), <strong>Tālu</strong> (Hard Palate), 
+        <strong>Mūrdhā</strong> (Roof Dome), <strong>Danta</strong> (Teeth), and <strong>Oṣṭha</strong> (Lips).
+      </p>
+      <div class="sutra-banner" style="margin-top: 1.25rem; margin-bottom: 0; padding: 0.65rem 0.95rem;">
+        <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-gold-dark);">Panini Sūtra:</span>
+        <div class="deva-text" style="font-size: 0.98rem; font-weight: 700; color: var(--text-primary); margin-top: 0.2rem;">ऌतुलसानां दन्ताः | ऋटुरषाणां मूर्धा</div>
+      </div>
+    </div>
+
+    <!-- Prayatna Card -->
+    <div class="iks-card">
+      <div style="width: 44px; height: 44px; background: var(--brand-light); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 1.1rem; border: 1px solid rgba(230, 81, 0, 0.2);">
+        <svg class="ui-icon ui-icon-lg" style="color: var(--brand-primary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/>
+        </svg>
+      </div>
+      <h3 class="classical-heading" style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary);">
+        प्रयत्न (Prayatna - Articulatory Effort)
+      </h3>
+      <p style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.65;">
+        Controls acoustic breath and vocal cord vibration. 
+        <strong>Alpaprāṇa</strong> (gentle breath) vs <strong>Mahāprāṇa</strong> (aspiration), and 
+        <strong>Ghoṣa</strong> (voiced vibration) vs <strong>Aghoṣa</strong> (unvoiced pure articulation).
+      </p>
+      <div class="sutra-banner" style="margin-top: 1.25rem; margin-bottom: 0; padding: 0.65rem 0.95rem; border-left-color: var(--brand-primary); background: var(--brand-light);">
+        <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--brand-primary);">Varga Division:</span>
+        <div class="deva-text" style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-top: 0.2rem;">१ व ३ = अल्पप्राण | २ व ४ = महाप्राण</div>
+      </div>
+    </div>
+
+    <!-- AI + IKS Hybrid Card -->
+    <div class="iks-card">
+      <div style="width: 44px; height: 44px; background: var(--status-clean-bg); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 1.1rem; border: 1px solid var(--status-clean-border);">
+        <svg class="ui-icon ui-icon-lg" style="color: var(--status-clean);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/>
+        </svg>
+      </div>
+      <h3 class="classical-heading" style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary);">
+        Deterministic IKS Engine
+      </h3>
+      <p style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.65;">
+        Google Gemini transcribes raw spoken phonemes without auto-correction. Our deterministic 
+        backend then runs the difference through canonical Pāṇinian phonetic tables to compute anatomical remedies.
+      </p>
+      <div class="sutra-banner" style="margin-top: 1.25rem; margin-bottom: 0; padding: 0.65rem 0.95rem; border-left-color: var(--status-clean); background: var(--status-clean-bg);">
+        <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--status-clean);">IKS + AI Synergy:</span>
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--status-clean); margin-top: 0.2rem;">Gemini identifies phonemes • Śikṣā diagnoses remedies</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.getElementById("preferences-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const lang = document.getElementById("select-language").value;
+    const level = document.getElementById("select-level").value;
+    const name = document.getElementById("student-name").value || "Arya Sharma";
+
+    localStorage.setItem("vaani_lang", lang);
+    localStorage.setItem("vaani_level", level);
+    localStorage.setItem("vaani_username", name);
+
+    window.location.href = "{{ url_for('practice') }}";
+  });
+</script>
+{% endblock %}
